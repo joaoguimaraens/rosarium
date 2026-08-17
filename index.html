@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rosarium | Reze o rosário em latim</title>
+  <link rel="icon" type="image/x-icon" href="rosary.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="marked.min.js"></script>
+</head>
+<body>  
+<div class="container">
+  <img src="rosary.svg">
+  <main id="content"></main>
+</div>
+<script>
+  fetch('rosarium.md')
+    .then(response => response.text())
+    .then(markdown => {
+      document.getElementById('content').innerHTML = marked.parse(markdown);
+    })
+    .catch(error => {
+      document.getElementById('content').innerHTML = `
+        <p class="error">Error loading the file: ${error}</p>
+      `;
+    });
+</script>
+</body>
+</html>
