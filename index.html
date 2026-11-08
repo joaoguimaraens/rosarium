@@ -3,27 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Reze o santo rosário em latim, com tradução em português e os mistérios para cada dia da semana.">
   <title>Rosarium | Reze o rosário em latim</title>
-  <link rel="icon" type="image/x-icon" href="rosary.svg">
-  <link rel="stylesheet" href="style.css">
-  <script src="marked.min.js"></script>
+  <link id="favicon" rel="icon" type="image/svg+xml" sizes="any" href="rosary.svg?v=3">
+  <link rel="preload" href="assets/fonts/source-serif-4/SourceSerif4-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/vendor/marked/marked.min.js" defer></script>
+  <script src="assets/js/content.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
 </head>
-<body>  
-<div class="container">
-  <img src="rosary.svg">
-  <main id="content"></main>
-</div>
-<script>
-  fetch('rosarium.md')
-    .then(response => response.text())
-    .then(markdown => {
-      document.getElementById('content').innerHTML = marked.parse(markdown);
-    })
-    .catch(error => {
-      document.getElementById('content').innerHTML = `
-        <p class="error">Error loading the file: ${error}</p>
-      `;
-    });
-</script>
+<body id="inicio">
+  <a class="skip-link" href="#content">Ir para as orações</a>
+
+  <header class="site-header container text-center">
+    <span class="rosary-mark" aria-hidden="true"></span>
+    <p class="eyebrow">O santo rosário · Latim e português</p>
+    <h1>Rosarium</h1>
+    <blockquote class="marian-quote">
+      <p>“<em>Rezem o Rosário todos os dias.</em>”</p>
+      <cite>— Santíssima Virgem Maria</cite>
+    </blockquote>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Tema escuro" aria-pressed="false" title="Ativar tema escuro" hidden>
+      <svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+      </svg>
+      <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+      </svg>
+    </button>
+  </header>
+
+  <nav class="section-nav" aria-label="Partes do rosário" hidden>
+    <div class="container">
+      <ul id="section-links" class="nav justify-content-center"></ul>
+    </div>
+  </nav>
+
+  <main id="content" class="container reading-container" tabindex="-1" aria-busy="true">
+    <p class="load-status" role="status">Preparando as orações…</p>
+  </main>
+
+  <noscript>
+    <p class="container load-status">Ative o JavaScript para ler as orações nesta página ou <a href="rosarium.md">acesse o texto completo</a>.</p>
+  </noscript>
+
+  <footer class="site-footer container text-center">
+    <a href="#inicio">Voltar ao início <span aria-hidden="true">↑</span></a>
+  </footer>
 </body>
 </html>
