@@ -2,7 +2,7 @@
 
 Página estática para rezar o rosário em latim, com tradução em português. [Acesse o site](https://joaoguimaraens.github.io/rosarium/).
 
-No celular, toque na oração em latim para mostrar ou ocultar a tradução. O tema começa na preferência do navegador e pode ser trocado pelo botão de sol e lua.
+No celular, toque na oração em latim para mostrar ou ocultar a tradução. O botão de sol e lua salva a escolha do tema no navegador. Sem uma escolha salva, o site acompanha o tema do navegador.
 
 ## Rodar localmente
 
