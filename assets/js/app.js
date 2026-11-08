@@ -40,7 +40,7 @@
     content.setAttribute("aria-busy", "true");
     content.innerHTML = '<p class="load-status" role="status">Preparando as orações…</p>';
     try {
-      const response = await fetch("rosarium.md");
+      const response = await fetch("rosarium.md", { cache: "no-cache" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const result = RosariumContent.render(await response.text());
       content.replaceChildren(result.content);

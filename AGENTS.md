@@ -28,7 +28,7 @@ Página estática para rezar o rosário em latim e português. Priorize a leitur
 Execute os comandos do [README](README.md) e `git diff --check`. Não há testes automatizados de navegador. Faça verificações proporcionais à mudança:
 
 - Confira 320/390/768/1280 px, temas, favicon, teclado, toque, redimensionamento e ausência de rolagem horizontal.
-- Preserve as seis seções e os 27 pares de orações/mistérios; confira navegação, fragmentos e hospedagem em subdiretório.
+- Preserve as seis seções e os 28 pares de orações/mistérios; confira navegação, fragmentos e hospedagem em subdiretório.
 - Para mudanças no carregamento, teste falha e nova tentativa. Relate somente verificações executadas.
 
 ## Publicação
