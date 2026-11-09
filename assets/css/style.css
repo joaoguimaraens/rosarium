@@ -199,8 +199,9 @@ h1 {
   cursor: pointer;
 }
 
-.theme-toggle:hover {
+.theme-toggle:active {
   border-color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .theme-icon {
@@ -249,6 +250,7 @@ h1 {
 }
 
 .section-nav .nav {
+  justify-content: center;
   gap: 0.15rem;
   padding-block: 0.25rem;
 }
@@ -264,6 +266,17 @@ h1 {
   font-size: 0.85rem;
   line-height: 1;
   text-decoration: none;
+}
+
+.section-nav .nav-link:active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+@media (hover: hover) {
+  .theme-toggle:hover {
+    border-color: var(--accent);
+  }
 }
 
 @media (min-width: 768px) and (hover: hover) {
@@ -551,6 +564,23 @@ h1 {
     padding: 1rem;
     font-size: 1.125rem;
     line-height: 1.65;
+  }
+}
+
+@media (orientation: portrait) {
+  .section-nav .nav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .section-nav .nav-item {
+    flex: 0 0 auto;
+  }
+
+  .section-nav .nav-link {
+    white-space: nowrap;
   }
 }
 
