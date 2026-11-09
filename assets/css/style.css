@@ -567,7 +567,7 @@ h1 {
   }
 }
 
-@media (orientation: portrait) {
+@media (max-width: 767px) and (orientation: landscape) {
   .section-nav .nav {
     display: flex;
     flex-wrap: nowrap;
