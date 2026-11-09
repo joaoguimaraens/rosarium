@@ -19,9 +19,9 @@
     });
   }
 
-  function updateCurrentLink() {
+  function updateCurrentLink(hash = window.location.hash) {
     links.querySelectorAll("a").forEach(link => {
-      if (link.hash === window.location.hash) {
+      if (link.hash === hash) {
         link.setAttribute("aria-current", "location");
       } else {
         link.removeAttribute("aria-current");
@@ -75,7 +75,22 @@
     else expandedOnMobile.add(prayer);
   });
 
+  document.addEventListener("click", event => {
+    if (event.defaultPrevented || event.button !== 0
+      || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const target = document.getElementById(link.hash.slice(1));
+    if (!target) return;
+
+    event.preventDefault();
+    if (!target.hasAttribute("tabindex")) target.tabIndex = -1;
+    target.focus({ preventScroll: true });
+    target.scrollIntoView();
+    updateCurrentLink(link.hash);
+  });
+
   mobile.addEventListener("change", syncLayout);
-  window.addEventListener("hashchange", updateCurrentLink);
+  window.addEventListener("hashchange", () => updateCurrentLink());
   loadPrayers();
 })();

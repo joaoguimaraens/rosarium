@@ -51,6 +51,7 @@
   --bs-link-hover-color: var(--text);
   --bs-link-hover-color-rgb: 48, 58, 70;
   --reading-font: var(--bs-body-font-family);
+  --theme-transition: 500ms ease-in-out;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -143,8 +144,7 @@ a {
 }
 
 .eyebrow,
-.language-labels,
-.section-index {
+.language-labels {
   color: var(--muted);
   font-size: 0.7rem;
   font-weight: 600;
@@ -182,10 +182,14 @@ h1 {
 }
 
 .theme-toggle {
-  display: inline-flex;
+  --theme-slot-size: 30px;
+  --theme-slot-gap: 4px;
+  isolation: isolate;
+  display: inline-grid;
+  grid-template-columns: repeat(2, var(--theme-slot-size));
   min-height: 44px;
   align-items: center;
-  gap: 4px;
+  gap: var(--theme-slot-gap);
   margin-top: 0.6rem;
   padding: 5px;
   border: 1px solid var(--line);
@@ -200,14 +204,39 @@ h1 {
 }
 
 .theme-icon {
+  grid-row: 1;
+  z-index: 1;
   box-sizing: content-box;
   padding: 6px;
   border-radius: 50%;
+  transition: color var(--theme-transition);
+}
+
+.theme-icon-sun {
+  grid-column: 1;
+}
+
+.theme-icon-moon {
+  grid-column: 2;
+}
+
+.theme-toggle::before {
+  grid-area: 1 / 1;
+  width: var(--theme-slot-size);
+  height: var(--theme-slot-size);
+  border-radius: 50%;
+  background: var(--accent-soft);
+  content: "";
+  transform: translateX(0);
+  transition: transform var(--theme-transition), background-color var(--theme-transition);
+}
+
+.theme-toggle[aria-pressed="true"]::before {
+  transform: translateX(calc(100% + var(--theme-slot-gap)));
 }
 
 .theme-toggle[aria-pressed="false"] .theme-icon-sun,
 .theme-toggle[aria-pressed="true"] .theme-icon-moon {
-  background: var(--accent-soft);
   color: var(--accent);
 }
 
@@ -228,17 +257,39 @@ h1 {
   display: flex;
   min-height: 44px;
   align-items: center;
-  padding: 0.55rem 0.9rem;
+  gap: 0.35rem;
+  padding: 0.75rem 0.9rem;
   border-radius: 4px;
   color: var(--muted);
   font-size: 0.85rem;
+  line-height: 1;
   text-decoration: none;
 }
 
-.section-nav .nav-link:hover,
-.section-nav .nav-link[aria-current="location"] {
-  background: var(--accent-soft);
-  color: var(--accent);
+@media (hover: hover) {
+  .section-nav .nav-link:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+}
+
+.section-nav .nav-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}
+
+.nav-icon {
+  display: block;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask: var(--section-icon) center / contain no-repeat;
+  mask: var(--section-icon) center / contain no-repeat;
+}
+
+.nav-label {
+  display: block;
 }
 
 .reading-container {
@@ -265,6 +316,40 @@ h1 {
   gap: 1rem;
   align-items: baseline;
   margin-bottom: 1rem;
+}
+
+.section-icon {
+  flex: 0 0 24px;
+  height: 24px;
+  align-self: flex-start;
+  margin-top: 0.45rem;
+  background-color: var(--muted);
+  -webkit-mask: var(--section-icon) center / contain no-repeat;
+  mask: var(--section-icon) center / contain no-repeat;
+}
+
+.section-icon-oracoes-iniciais {
+  --section-icon: url("../icons/initial.svg");
+}
+
+.section-icon-misterios-gozosos {
+  --section-icon: url("../icons/smile.svg");
+}
+
+.section-icon-misterios-dolorosos {
+  --section-icon: url("../icons/cross.svg");
+}
+
+.section-icon-misterios-gloriosos {
+  --section-icon: url("../icons/halo.svg");
+}
+
+.section-icon-misterios-luminosos {
+  --section-icon: url("../icons/sun.svg");
+}
+
+.section-icon-oracoes-finais {
+  --section-icon: url("../icons/final.svg");
 }
 
 .section-heading h2 {
@@ -352,6 +437,9 @@ h1 {
 
 .prayer-copy {
   display: block;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 .prayer-copy strong {
@@ -384,6 +472,24 @@ h1 {
   display: inline-block;
   padding: 0.75rem;
   font-size: 0.8rem;
+}
+
+/* Animate theme colors only while switching, keeping hover feedback immediate. */
+:root.theme-transition :is(
+  body, a, h1, .eyebrow, .language-labels, .marian-quote cite,
+  .theme-toggle, .theme-icon, .section-nav .nav-link, .section-heading h2,
+  .section-subtitle, .section-days, .prayer-name, .load-status,
+  .load-status button, .site-footer
+) {
+  transition: color var(--theme-transition), background-color var(--theme-transition),
+    border-color var(--theme-transition), outline-color var(--theme-transition);
+}
+
+:root.theme-transition :is(
+  .skip-link, .rosary-mark, .section-icon, .section-nav, .prayer-list, .prayer, .translation
+) {
+  transition: background-color var(--theme-transition), border-color var(--theme-transition),
+    outline-color var(--theme-transition);
 }
 
 @media (max-width: 767px) {

@@ -66,8 +66,8 @@ const RosariumContent = (() => {
       section.id = id;
       section.setAttribute("aria-labelledby", `${id}-title`);
       const heading = element("header", "section-heading");
-      const number = element("span", "section-index", String(index + 1).padStart(2, "0"));
-      number.setAttribute("aria-hidden", "true");
+      const icon = element("span", `section-icon section-icon-${id}`);
+      icon.setAttribute("aria-hidden", "true");
       const titleGroup = element("div");
       const h2 = element("h2", "", titles[0].textContent);
       h2.id = `${id}-title`;
@@ -84,7 +84,7 @@ const RosariumContent = (() => {
         rows.shift();
       }
 
-      heading.append(number, titleGroup);
+      heading.append(icon, titleGroup);
       const languages = element("div", "language-labels");
       languages.setAttribute("aria-hidden", "true");
       languages.append(element("span", "", "Latim"), element("span", "", "Português"));
@@ -103,7 +103,10 @@ const RosariumContent = (() => {
       content.append(section);
 
       const item = element("li", "nav-item");
-      const link = element("a", "nav-link", title.replace(/^(?:Orações|Mistérios) /, ""));
+      const link = element("a", "nav-link");
+      const navIcon = element("span", `nav-icon section-icon-${id}`);
+      navIcon.setAttribute("aria-hidden", "true");
+      link.append(navIcon, element("span", "nav-label", title.replace(/^(?:Orações|Mistérios) /, "")));
       link.href = `#${id}`;
       item.append(link);
       links.append(item);
