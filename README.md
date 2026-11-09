@@ -1,6 +1,4 @@
-# Rosarium
-
-Reze o rosário em latim, com tradução em português e uma interface simples, mobile-first.
+Reze o rosário em latim.
 
 ## Local
 
@@ -28,6 +26,6 @@ Temas e traduções conforme [AGENTS.md](AGENTS.md).
 
 ## Publicação
 
-O [workflow](.github/workflows/pages.yml) verifica JavaScript, HTML e caminhos locais em pushes na `main` e em pull requests. Publica no GitHub Pages após os checks passarem na `main`. Também aceita execução manual pela aba Actions.
+O [workflow](.github/workflows/pages.yml) verifica JavaScript, HTML e caminhos locais em pushes na `main` e em pull requests. Alterações apenas em arquivos `.md` não acionam o workflow, exceto `rosarium.md`, que contém as orações do site. Publica no GitHub Pages após os checks passarem na `main`. Também aceita execução manual pela aba Actions.
 
 Em Settings / Pages / Build and deployment, selecione GitHub Actions como origem. A publicação usa o token automático do GitHub. O site funciona sem build, com fontes e bibliotecas locais.
