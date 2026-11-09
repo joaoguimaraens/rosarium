@@ -266,7 +266,7 @@ h1 {
   text-decoration: none;
 }
 
-@media (hover: hover) {
+@media (min-width: 768px) and (hover: hover) {
   .section-nav .nav-link:hover {
     background: var(--accent-soft);
     color: var(--accent);
