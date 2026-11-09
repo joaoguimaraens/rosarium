@@ -1,5 +1,89 @@
-/* The Markdown is trusted, versioned project content, never visitor input. */
+/* Only trusted, versioned project Markdown is parsed or rendered here. */
 const RosariumContent = (() => {
+  // Table order is fixed; titles can change without changing public fragments or icons.
+  const sections = [
+    { id: "oracoes-iniciais", icon: "initial", prayerCount: 7 },
+    { id: "misterios-gozosos", icon: "smile", prayerCount: 5, hasWeekdays: true },
+    { id: "misterios-dolorosos", icon: "cross", prayerCount: 5, hasWeekdays: true },
+    { id: "misterios-gloriosos", icon: "halo", prayerCount: 5, hasWeekdays: true },
+    { id: "misterios-luminosos", icon: "sun", prayerCount: 5, hasWeekdays: true },
+    { id: "oracoes-finais", icon: "final", prayerCount: 1 }
+  ];
+
+  function isNameRow(cells) {
+    return cells.every(cell => cell.tokens.length === 1 && cell.tokens[0].type === "em");
+  }
+
+  function namesFrom(cells) {
+    return cells.map(cell => cell.tokens[0].text);
+  }
+
+  function validateTable(table) {
+    // Marked pads missing cells and discards extra cells; check raw widths before using tokens.
+    const lines = table.raw.trim().split("\n");
+    const hasTwoColumns = lines.every(line => line.trim().replace(/^\||\|$/g, "")
+      .split(/(?<!\\)\|/).length === 2);
+    const cells = [...table.header, ...table.rows.flat()];
+    if (table.header.length !== 2 || !hasTwoColumns || cells.some(cell => !cell.text.trim())) {
+      throw new Error("Cada linha deve conter latim e português, sem células vazias.");
+    }
+    if (!table.rows.length) throw new Error("A seção não contém orações.");
+  }
+
+  function parsePrayers(rows) {
+    const prayers = [];
+    let names = null;
+    rows.forEach(cells => {
+      if (isNameRow(cells)) {
+        if (names) throw new Error("Nome de oração sem texto correspondente.");
+        names = namesFrom(cells);
+      } else {
+        prayers.push({
+          names,
+          latin: marked.Parser.parseInline(cells[0].tokens),
+          portuguese: marked.Parser.parseInline(cells[1].tokens)
+        });
+        names = null;
+      }
+    });
+    if (names) throw new Error("Nome de oração sem texto correspondente.");
+    return prayers;
+  }
+
+  function parseSection(table, specification) {
+    validateTable(table);
+    const rows = [...table.rows];
+    let weekdays = null;
+    if (specification.hasWeekdays) {
+      if (!isNameRow(rows[0])) throw new Error("Os mistérios devem indicar os dias nos dois idiomas.");
+      weekdays = namesFrom(rows.shift());
+    }
+    const prayers = parsePrayers(rows);
+    if (prayers.length !== specification.prayerCount) {
+      throw new Error(`Quantidade de orações inválida em ${specification.id}.`);
+    }
+    return {
+      id: specification.id,
+      icon: specification.icon,
+      latinTitle: table.header[0].text,
+      title: table.header[1].text,
+      weekdays,
+      prayers
+    };
+  }
+
+  function parse(markdown) {
+    const tables = marked.lexer(markdown).filter(token => token.type === "table");
+    if (tables.length !== sections.length) throw new Error("O rosário deve conter seis seções.");
+    const parsed = tables.map((table, index) => parseSection(table, sections[index]));
+    const ids = new Set(parsed.map(section => section.id));
+    const titles = new Set(parsed.map(section => section.title.trim().toLowerCase()));
+    if (ids.size !== parsed.length || titles.size !== parsed.length) {
+      throw new Error("Identificadores e títulos de seção devem ser únicos.");
+    }
+    return parsed;
+  }
+
   function element(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -7,42 +91,74 @@ const RosariumContent = (() => {
     return node;
   }
 
-  function copyCell(cell, className) {
-    const node = element("span", className);
-    node.append(...Array.from(cell.childNodes, child => child.cloneNode(true)));
-    return node;
+  function prayerCopy(html) {
+    const copy = element("span", "prayer-copy");
+    copy.innerHTML = html;
+    return copy;
   }
 
-  function isNameRow(cells) {
-    return cells.every(cell => cell.children.length === 1
-      && cell.firstElementChild.tagName === "EM"
-      && cell.textContent.trim() === cell.firstElementChild.textContent.trim());
-  }
-
-  function createPrayer(cells, names) {
+  function createPrayer(data) {
     const prayer = element("details", "prayer");
     const latin = element("summary");
     const translation = element("div", "translation");
     latin.lang = "la";
     translation.lang = "pt-BR";
-
-    if (names) {
-      latin.append(element("span", "prayer-name", names[0].textContent));
-      translation.append(element("span", "prayer-name", names[1].textContent));
+    if (data.names) {
+      latin.append(element("span", "prayer-name", data.names[0]));
+      translation.append(element("span", "prayer-name", data.names[1]));
     }
-
-    latin.append(copyCell(cells[0], "prayer-copy"));
-    translation.append(copyCell(cells[1], "prayer-copy"));
+    latin.append(prayerCopy(data.latin));
+    translation.append(prayerCopy(data.portuguese));
     prayer.append(latin, translation);
     return prayer;
   }
 
-  function render(markdown) {
-    const template = document.createElement("template");
-    template.innerHTML = marked.parse(markdown);
-    const tables = [...template.content.querySelectorAll("table")];
-    if (!tables.length) throw new Error("Nenhuma oração encontrada.");
+  function createHeading(data) {
+    const heading = element("header", "section-heading");
+    const icon = element("span", `section-icon icon-${data.icon}`);
+    icon.setAttribute("aria-hidden", "true");
+    const titleGroup = element("div");
+    const title = element("h2", "", data.latinTitle);
+    title.id = `${data.id}-title`;
+    title.lang = "la";
+    titleGroup.append(title, element("p", "section-subtitle", data.title));
+    if (data.weekdays) {
+      const days = element("p", "section-days");
+      const latinDays = element("span", "", data.weekdays[0]);
+      latinDays.lang = "la";
+      days.append(latinDays, element("span", "", data.weekdays[1]));
+      titleGroup.append(days);
+    }
+    heading.append(icon, titleGroup);
+    return heading;
+  }
 
+  function createSection(data) {
+    const section = element("section", "prayer-section");
+    section.id = data.id;
+    section.setAttribute("aria-labelledby", `${data.id}-title`);
+    const languages = element("div", "language-labels");
+    languages.setAttribute("aria-hidden", "true");
+    languages.append(element("span", "", "Latim"), element("span", "", "Português"));
+    const prayers = element("div", "prayer-list");
+    prayers.append(...data.prayers.map(createPrayer));
+    section.append(createHeading(data), languages, prayers);
+    return section;
+  }
+
+  function createSectionLink(data) {
+    const item = element("li");
+    const link = element("a", "nav-link");
+    const icon = element("span", `nav-icon icon-${data.icon}`);
+    icon.setAttribute("aria-hidden", "true");
+    link.append(icon, element("span", "nav-label", data.title.replace(/^(?:Orações|Mistérios) /, "")));
+    link.href = `#${data.id}`;
+    item.append(link);
+    return item;
+  }
+
+  function render(markdown) {
+    const parsed = parse(markdown);
     const content = document.createDocumentFragment();
     const links = document.createDocumentFragment();
     const hint = element("p", "reading-hint");
@@ -50,70 +166,10 @@ const RosariumContent = (() => {
       element("span", "mobile-hint", "Toque na oração em latim para ver a tradução."),
       element("span", "desktop-hint", "Reze em latim. Acompanhe a tradução ao lado.")
     );
-    content.append(hint);
-
-    tables.forEach((table, index) => {
-      const titles = [...table.querySelectorAll("thead th")];
-      const rows = [...table.querySelectorAll("tbody tr")];
-      if (titles.length !== 2 || rows.some(row => row.cells.length !== 2)) {
-        throw new Error("As orações devem ter os dois idiomas.");
-      }
-
-      const title = titles[1].textContent.trim();
-      const id = title.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase().replace(/[^a-z0-9]+/g, "-");
-      const section = element("section", "prayer-section");
-      section.id = id;
-      section.setAttribute("aria-labelledby", `${id}-title`);
-      const heading = element("header", "section-heading");
-      const icon = element("span", `section-icon section-icon-${id}`);
-      icon.setAttribute("aria-hidden", "true");
-      const titleGroup = element("div");
-      const h2 = element("h2", "", titles[0].textContent);
-      h2.id = `${id}-title`;
-      h2.lang = "la";
-      titleGroup.append(h2, element("p", "section-subtitle", title));
-
-      // In mystery tables the first emphasized row describes the weekdays.
-      if (index > 0 && isNameRow([...rows[0].cells])) {
-        const days = element("p", "section-days");
-        const latinDays = element("span", "", rows[0].cells[0].textContent);
-        latinDays.lang = "la";
-        days.append(latinDays, element("span", "", rows[0].cells[1].textContent));
-        titleGroup.append(days);
-        rows.shift();
-      }
-
-      heading.append(icon, titleGroup);
-      const languages = element("div", "language-labels");
-      languages.setAttribute("aria-hidden", "true");
-      languages.append(element("span", "", "Latim"), element("span", "", "Português"));
-      const prayers = element("div", "prayer-list");
-      let names = null;
-      rows.forEach(row => {
-        const cells = [...row.cells];
-        if (isNameRow(cells)) {
-          names = cells;
-        } else {
-          prayers.append(createPrayer(cells, names));
-          names = null;
-        }
-      });
-      section.append(heading, languages, prayers);
-      content.append(section);
-
-      const item = element("li", "nav-item");
-      const link = element("a", "nav-link");
-      const navIcon = element("span", `nav-icon section-icon-${id}`);
-      navIcon.setAttribute("aria-hidden", "true");
-      link.append(navIcon, element("span", "nav-label", title.replace(/^(?:Orações|Mistérios) /, "")));
-      link.href = `#${id}`;
-      item.append(link);
-      links.append(item);
-    });
-
+    content.append(hint, ...parsed.map(createSection));
+    links.append(...parsed.map(createSectionLink));
     return { content, links };
   }
 
-  return { render };
+  return { parse, render };
 })();

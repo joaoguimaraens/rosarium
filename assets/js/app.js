@@ -36,11 +36,11 @@
     updateCurrentLink();
   }
 
-  async function loadPrayers() {
+  async function loadPrayers(retry = false) {
     content.setAttribute("aria-busy", "true");
     content.innerHTML = '<p class="load-status" role="status">Preparando as orações…</p>';
     try {
-      const response = await fetch("rosarium.md", { cache: "no-cache" });
+      const response = await fetch("rosarium.md", { cache: retry ? "no-cache" : "default" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const result = RosariumContent.render(await response.text());
       content.replaceChildren(result.content);
@@ -53,10 +53,10 @@
       content.innerHTML = `
         <div class="load-status" role="alert">
           <p>Não foi possível carregar as orações. Tente novamente.</p>
-          <button type="button" class="btn btn-outline-secondary" id="retry">Tentar novamente</button>
-          <p class="mt-3"><a href="rosarium.md">Abrir o texto das orações</a></p>
+          <button type="button" id="retry">Tentar novamente</button>
+          <p class="source-link"><a href="rosarium.md">Abrir o texto das orações</a></p>
         </div>`;
-      document.getElementById("retry").addEventListener("click", loadPrayers);
+      document.getElementById("retry").addEventListener("click", () => loadPrayers(true));
       console.error("Falha ao carregar o rosário:", error);
     } finally {
       content.setAttribute("aria-busy", "false");
@@ -83,11 +83,8 @@
     const target = document.getElementById(link.hash.slice(1));
     if (!target) return;
 
-    event.preventDefault();
     if (!target.hasAttribute("tabindex")) target.tabIndex = -1;
     target.focus({ preventScroll: true });
-    target.scrollIntoView();
-    updateCurrentLink(link.hash);
   });
 
   mobile.addEventListener("change", syncLayout);

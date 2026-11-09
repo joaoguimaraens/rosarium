@@ -47,6 +47,9 @@ jobs:
       - name: Validar HTML
         run: npx --yes html-validate@11.19.0 --preset standard --max-warnings 0 index.html
 
+      - name: Verificar conteúdo e fontes
+        run: node --test scripts/content.test.cjs
+
       - name: Verificar arquivos e caminhos locais
         run: python3 scripts/check_site.py
 

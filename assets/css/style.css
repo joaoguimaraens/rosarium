@@ -1,72 +1,30 @@
 @font-face {
   font-family: "Source Serif 4";
-  src: url("../fonts/source-serif-4/SourceSerif4-latin-ext.woff2") format("woff2");
+  src: url("../fonts/source-serif-4/SourceSerif4-normal.woff2") format("woff2");
   font-style: normal;
-  font-weight: 200 900;
+  font-weight: 400 700;
   font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 @font-face {
   font-family: "Source Serif 4";
-  src: url("../fonts/source-serif-4/SourceSerif4-latin.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 200 900;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Source Serif 4";
-  src: url("../fonts/source-serif-4/SourceSerif4-italic-latin-ext.woff2") format("woff2");
+  src: url("../fonts/source-serif-4/SourceSerif4-italic.woff2") format("woff2");
   font-style: italic;
-  font-weight: 200 900;
+  font-weight: 400;
   font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: "Source Serif 4";
-  src: url("../fonts/source-serif-4/SourceSerif4-italic-latin.woff2") format("woff2");
-  font-style: italic;
-  font-weight: 200 900;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 :root {
   color-scheme: light dark;
-  --page-bg: #f5f7fa;
-  --surface: #fcfdff;
-  --text: #303a46;
-  --muted: #626f7d;
-  --accent: #3f6d99;
-  --accent-soft: #e6edf5;
-  --line: #dce3eb;
-  --bs-body-bg: var(--page-bg);
-  --bs-body-color: var(--text);
-  --bs-body-font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
-  --bs-link-color: var(--accent);
-  --bs-link-color-rgb: 63, 109, 153;
-  --bs-link-hover-color: var(--text);
-  --bs-link-hover-color-rgb: 48, 58, 70;
-  --reading-font: var(--bs-body-font-family);
+  --page-bg: light-dark(#f5f7fa, #192129);
+  --surface: light-dark(#fcfdff, #202b35);
+  --text: light-dark(#303a46, #e0e7ed);
+  --muted: light-dark(#626f7d, #a5b4c1);
+  --accent: light-dark(#3f6d99, #9fc2e2);
+  --accent-soft: light-dark(#e6edf5, #2b4054);
+  --line: light-dark(#dce3eb, #374755);
+  --reading-font: "Source Serif 4", Georgia, "Times New Roman", serif;
   --theme-transition: 500ms ease-in-out;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --page-bg: #192129;
-    --surface: #202b35;
-    --text: #e0e7ed;
-    --muted: #a5b4c1;
-    --accent: #9fc2e2;
-    --accent-soft: #2b4054;
-    --line: #374755;
-    --bs-link-color-rgb: 159, 194, 226;
-    --bs-link-hover-color-rgb: 224, 231, 237;
-  }
 }
 
 :root[data-theme="light"] {
@@ -75,15 +33,16 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --page-bg: #192129;
-  --surface: #202b35;
-  --text: #e0e7ed;
-  --muted: #a5b4c1;
-  --accent: #9fc2e2;
-  --accent-soft: #2b4054;
-  --line: #374755;
-  --bs-link-color-rgb: 159, 194, 226;
-  --bs-link-hover-color-rgb: 224, 231, 237;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 html {
@@ -91,12 +50,48 @@ html {
 }
 
 body {
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--text);
+  font-family: var(--reading-font);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
 }
 
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2 {
+  line-height: 1.2;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+button {
+  margin: 0;
+  font: inherit;
+}
+
+svg {
+  vertical-align: middle;
+}
+
 a {
+  color: var(--accent);
   text-underline-offset: 0.25em;
+}
+
+a:hover {
+  color: var(--text);
 }
 
 :focus-visible {
@@ -111,6 +106,8 @@ a {
 }
 
 .container {
+  width: 100%;
+  margin-inline: auto;
   max-width: 1040px;
   padding-inline: 2rem;
 }
@@ -130,6 +127,7 @@ a {
 }
 
 .site-header {
+  text-align: center;
   padding-block: 2rem 1.5rem;
 }
 
@@ -143,17 +141,12 @@ a {
   mask: url("../../rosary.svg") center / contain no-repeat;
 }
 
-.eyebrow,
 .language-labels {
   color: var(--muted);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-}
-
-.eyebrow {
-  margin-bottom: 0.5rem;
 }
 
 h1 {
@@ -250,6 +243,11 @@ h1 {
 }
 
 .section-nav .nav {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   justify-content: center;
   gap: 0.15rem;
   padding-block: 0.25rem;
@@ -341,27 +339,27 @@ h1 {
   mask: var(--section-icon) center / contain no-repeat;
 }
 
-.section-icon-oracoes-iniciais {
+.icon-initial {
   --section-icon: url("../icons/initial.svg");
 }
 
-.section-icon-misterios-gozosos {
+.icon-smile {
   --section-icon: url("../icons/smile.svg");
 }
 
-.section-icon-misterios-dolorosos {
+.icon-cross {
   --section-icon: url("../icons/cross.svg");
 }
 
-.section-icon-misterios-gloriosos {
+.icon-halo {
   --section-icon: url("../icons/halo.svg");
 }
 
-.section-icon-misterios-luminosos {
+.icon-sun {
   --section-icon: url("../icons/sun.svg");
 }
 
-.section-icon-oracoes-finais {
+.icon-final {
   --section-icon: url("../icons/final.svg");
 }
 
@@ -466,7 +464,12 @@ h1 {
 }
 
 .load-status button {
-  border-color: var(--accent);
+  min-height: 44px;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.375rem;
+  background: transparent;
+  cursor: pointer;
   color: var(--accent);
 }
 
@@ -476,7 +479,12 @@ h1 {
   color: var(--surface);
 }
 
+.source-link {
+  margin-top: 1rem;
+}
+
 .site-footer {
+  text-align: center;
   padding-block: 0 1.5rem;
   color: var(--muted);
 }
@@ -489,7 +497,7 @@ h1 {
 
 /* Animate theme colors only while switching, keeping hover feedback immediate. */
 :root.theme-transition :is(
-  body, a, h1, .eyebrow, .language-labels, .marian-quote cite,
+  body, a, h1, .language-labels, .marian-quote cite,
   .theme-toggle, .theme-icon, .section-nav .nav-link, .section-heading h2,
   .section-subtitle, .section-days, .prayer-name, .load-status,
   .load-status button, .site-footer
@@ -575,7 +583,7 @@ h1 {
     overflow-x: auto;
   }
 
-  .section-nav .nav-item {
+  .section-nav li {
     flex: 0 0 auto;
   }
 
