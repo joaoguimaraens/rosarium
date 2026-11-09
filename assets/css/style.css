@@ -81,10 +81,6 @@ button {
   font: inherit;
 }
 
-svg {
-  vertical-align: middle;
-}
-
 a {
   color: var(--accent);
   text-underline-offset: 0.25em;
@@ -201,16 +197,30 @@ h1 {
   grid-row: 1;
   z-index: 1;
   box-sizing: content-box;
+  width: 18px;
+  height: 18px;
   padding: 6px;
   border-radius: 50%;
   transition: color var(--theme-transition);
 }
 
+.theme-icon::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: currentColor;
+  -webkit-mask: var(--theme-icon) center / contain no-repeat;
+  mask: var(--theme-icon) center / contain no-repeat;
+  content: "";
+}
+
 .theme-icon-sun {
+  --theme-icon: url("../icons/sun.svg");
   grid-column: 1;
 }
 
 .theme-icon-moon {
+  --theme-icon: url("../icons/moon.svg");
   grid-column: 2;
 }
 

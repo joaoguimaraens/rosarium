@@ -7,7 +7,7 @@ Página estática para rezar o rosário em latim e português. Priorize a leitur
 - `index.html`: estrutura; `rosarium.md`: conteúdo bilíngue; `assets/css/style.css`: apresentação.
 - `assets/js/content.js` renderiza o Markdown; `app.js` carrega as orações e controla as traduções; `theme.js` controla o tema e o favicon.
 - `assets/fonts/source-serif-4/` e `assets/vendor/`: fonte e bibliotecas locais, com licenças. Não edite arquivos de terceiros manualmente.
-- `rosary.svg`: máscara do cabeçalho e favicon automático; `assets/icons/`: favicons claro/escuro derivados dele. Sol/lua: SVGs Lucide no HTML, licença em `assets/vendor/lucide/LICENSE`.
+- `rosary.svg`: máscara do cabeçalho e favicon automático; `assets/icons/`: favicons claro/escuro derivados dele e ícones SVG locais. Sol/lua: Lucide, licença em `assets/vendor/lucide/LICENSE`.
 - `.github/workflows/pages.yml`: CI e publicação; `scripts/check_site.py`: validação dos caminhos locais.
 
 ## Regras
