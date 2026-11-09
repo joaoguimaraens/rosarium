@@ -17,7 +17,7 @@ Página estática para rezar o rosário em latim e português. Priorize a leitur
 - Use caminhos relativos e arquivos locais; preserve as licenças das fontes e bibliotecas.
 - Mantenha o título seguido da citação: “Rezem o Rosário todos os dias.” — Santíssima Virgem Maria.
 - Salve a escolha manual do tema em `localStorage` e restaure-a entre visitas. Sem escolha válida salva, acompanhe o tema do navegador. Se o armazenamento estiver indisponível, mantenha a troca funcional durante a visita. Favicon e rosário do cabeçalho acompanham o tema.
-- Até 767 px, mostre latim primeiro; toque ou teclado alternam apenas sua tradução logo abaixo. Sem labels de tradução. A partir de 768 px, os idiomas ficam visíveis lado a lado.
+- Até 767 px em orientação vertical, mostre latim primeiro; toque ou teclado alternam apenas sua tradução logo abaixo. Sem labels de tradução nesse modo. Na horizontal, em qualquer largura, e a partir de 768 px, os idiomas ficam visíveis lado a lado.
 - Use controles nativos acessíveis, foco visível, alvos de toque confortáveis e tamanhos de texto legíveis.
 - Passe ao Marked somente o Markdown versionado; conteúdo externo exige sanitização.
 - Preserve Source Serif 4, a paleta azul, espaçamentos compactos e o rodapé apenas com o link para o início.

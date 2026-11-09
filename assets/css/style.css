@@ -526,15 +526,6 @@ h1 {
     font-size: 0.8rem;
   }
 
-  .mobile-hint {
-    display: inline;
-  }
-
-  .desktop-hint,
-  .language-labels {
-    display: none;
-  }
-
   .prayer-section {
     margin-bottom: 2rem;
   }
@@ -560,6 +551,17 @@ h1 {
     padding: 1rem;
     font-size: 1.125rem;
     line-height: 1.65;
+  }
+}
+
+@media (max-width: 767px) and (orientation: portrait) {
+  .mobile-hint {
+    display: inline;
+  }
+
+  .desktop-hint,
+  .language-labels {
+    display: none;
   }
 
   .prayer summary {

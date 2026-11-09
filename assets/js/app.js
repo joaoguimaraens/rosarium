@@ -2,7 +2,7 @@
   const content = document.getElementById("content");
   const navigation = document.querySelector(".section-nav");
   const links = document.getElementById("section-links");
-  const mobile = window.matchMedia("(max-width: 767px)");
+  const mobile = window.matchMedia("(max-width: 767px) and (orientation: portrait)");
   const expandedOnMobile = new WeakSet();
 
   function syncLayout() {
