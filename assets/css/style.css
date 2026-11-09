@@ -571,7 +571,7 @@ h1 {
   .section-nav .nav {
     display: flex;
     flex-wrap: nowrap;
-    justify-content: flex-start;
+    justify-content: safe center;
     overflow-x: auto;
   }
 
