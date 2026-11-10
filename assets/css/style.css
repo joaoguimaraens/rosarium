@@ -186,6 +186,7 @@ h1 {
   background: var(--surface);
   color: var(--muted);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .theme-toggle:active {
