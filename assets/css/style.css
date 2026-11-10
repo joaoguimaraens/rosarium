@@ -56,6 +56,7 @@ body {
   font-family: var(--reading-font);
   font-size: 1rem;
   line-height: 1.5;
+  overflow-wrap: anywhere;
   -webkit-text-size-adjust: 100%;
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
@@ -137,18 +138,9 @@ a:hover {
   mask: url("../../rosary.svg") center / contain no-repeat;
 }
 
-.language-labels {
-  color: var(--muted);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 h1 {
   margin-bottom: 0.65rem;
   color: var(--text);
-  font-family: var(--reading-font);
   font-size: clamp(2.9rem, 8vw, 4rem);
   font-weight: 400;
   letter-spacing: -0.025em;
@@ -156,7 +148,6 @@ h1 {
 
 .marian-quote {
   margin: 0;
-  font-family: var(--reading-font);
 }
 
 .marian-quote p {
@@ -377,7 +368,6 @@ h1 {
 .section-heading h2 {
   margin-bottom: 0.25rem;
   color: var(--text);
-  font-family: var(--reading-font);
   font-size: 1.85rem;
   font-weight: 400;
   letter-spacing: -0.025em;
@@ -405,7 +395,11 @@ h1 {
   grid-template-columns: 1fr 1fr;
   padding: 0 1.25rem 0.5rem;
   gap: 2rem;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .prayer-list {
@@ -418,7 +412,6 @@ h1 {
 .prayer {
   margin: 0;
   padding: 1.25rem;
-  font-family: var(--reading-font);
   font-size: 1.1rem;
   line-height: 1.65;
   overflow-wrap: break-word;
@@ -494,24 +487,12 @@ h1 {
   margin-top: 1rem;
 }
 
-.site-footer {
-  text-align: center;
-  padding-block: 0 1.5rem;
-  color: var(--muted);
-}
-
-.site-footer a {
-  display: inline-block;
-  padding: 0.75rem;
-  font-size: 0.8rem;
-}
-
 /* Animate theme colors only while switching, keeping hover feedback immediate. */
 :root.theme-transition :is(
   body, a, h1, .language-labels, .marian-quote cite,
   .theme-toggle, .theme-icon, .section-nav .nav-link, .section-heading h2,
   .section-subtitle, .section-days, .prayer-name, .load-status,
-  .load-status button, .site-footer
+  .load-status button
 ) {
   transition: color var(--theme-transition), background-color var(--theme-transition),
     border-color var(--theme-transition), outline-color var(--theme-transition);
@@ -539,7 +520,8 @@ h1 {
 
   .section-nav .nav {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* Keep up to three columns, allowing fewer when text grows. */
+    grid-template-columns: repeat(auto-fit, minmax(max(4rem, 30%), 1fr));
     padding-block: 0.2rem;
   }
 
@@ -604,6 +586,10 @@ h1 {
 }
 
 @media (max-width: 767px) and (orientation: portrait) {
+  html {
+    scroll-padding-top: 8rem;
+  }
+
   .mobile-hint {
     display: inline;
   }
@@ -626,5 +612,11 @@ h1 {
     margin: 0.75rem 0 0;
     padding-top: 0.75rem;
     border-top: 1px dashed var(--line);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle::before {
+    transition: background-color var(--theme-transition);
   }
 }

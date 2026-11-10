@@ -48,6 +48,7 @@
       navigation.hidden = false;
       syncLayout();
       scrollToSection();
+      if (retry) content.focus({ preventScroll: true });
     } catch (error) {
       navigation.hidden = true;
       content.innerHTML = `

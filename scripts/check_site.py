@@ -58,6 +58,7 @@ def check_site(root):
     # These files are also requested by JavaScript, beyond HTML/CSS references.
     for filename in (
         "rosarium.md",
+        "sw.js",
         "assets/icons/rosary-light.svg",
         "assets/icons/rosary-dark.svg",
     ):

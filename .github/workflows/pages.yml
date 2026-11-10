@@ -43,12 +43,13 @@ jobs:
           for script in assets/js/*.js; do
             node --check "$script"
           done
+          node --check sw.js
 
       - name: Validar HTML
         run: npx --yes html-validate@11.19.0 --preset standard --max-warnings 0 index.html
 
-      - name: Verificar conteúdo e fontes
-        run: node --test scripts/content.test.cjs
+      - name: Verificar conteúdo, fontes e acesso offline
+        run: node --test scripts/*.test.cjs
 
       - name: Verificar arquivos e caminhos locais
         run: python3 scripts/check_site.py
@@ -78,7 +79,7 @@ jobs:
       - name: Separar os arquivos públicos
         run: |
           mkdir _site
-          cp index.html rosarium.md rosary.svg _site/
+          cp index.html rosarium.md rosary.svg sw.js _site/
           cp -R assets _site/assets
 
       - name: Enviar o site

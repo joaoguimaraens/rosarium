@@ -1,38 +1,39 @@
 Reze o rosário em latim.
 
-## Local
+## Uso local
+
+Sirva a raiz por HTTP:
 
 ```bash
 python -m http.server 8000
 ```
 
-Abra [http://localhost:8000](http://localhost:8000).
+Abra [http://localhost:8000](http://localhost:8000). Não há dependências nem build; Node.js é usado apenas nas verificações.
 
-As orações ficam em `rosarium.md`; a interface, em `index.html` e `assets/`.
+As orações ficam em `rosarium.md`; a estrutura, o estilo e o comportamento ficam em `index.html` e `assets/`. Preserve as seis seções e os 28 pares de orações.
 
-As seis tabelas mantêm a ordem atual, latim à esquerda e português à direita. Linhas com ambos os campos em itálico nomeiam a oração seguinte; nos quatro grupos de mistérios, a primeira indica os dias. São 28 pares. Os fragmentos e ícones são fixados em `content.js`, independentemente dos títulos.
+## Acesso offline
 
-## Verificação
+Após a primeira visita terminar de salvar os arquivos, o site funciona sem internet no mesmo endereço. É necessário HTTPS ou `localhost`; limpar os dados do site remove a cópia offline.
 
-Use Node.js 24.8+ e Python 3.9+:
+O service worker nativo está em `sw.js` e é registrado por `assets/js/offline.js`. Mantenha a lista `FILES` atualizada ao adicionar, remover ou renomear recursos. Alterar arquivos já listados não exige mudar uma versão do cache. Atualizações aparecem em acessos posteriores; a página aberta não é recarregada.
+
+## Verificações
+
+Requer Node.js 24.8+ e Python 3.9+:
 
 ```bash
 node --check assets/js/content.js
 node --check assets/js/app.js
 node --check assets/js/theme.js
-node --test scripts/content.test.cjs
+node --check assets/js/offline.js
+node --check sw.js
+node --test scripts/*.test.cjs
 npx --yes html-validate@11.19.0 --preset standard --max-warnings 0 index.html
 python scripts/check_site.py
+git diff --check
 ```
-
-Temas e traduções conforme [AGENTS.md](AGENTS.md).
-
-Os testes usam apenas Node.js e o Marked local. Conferem o conteúdo e a cobertura dos caracteres pelos subconjuntos das fontes; ao acrescentar caracteres, atualize também as [fontes](assets/fonts/source-serif-4/README.md). As cores usam `light-dark()`, disponível nos navegadores atuais desde maio de 2024.
 
 ## Publicação
 
-O [workflow](.github/workflows/pages.yml) verifica JavaScript, HTML, conteúdo, fontes e caminhos locais em pushes na `main` e em pull requests. Alterações apenas em arquivos `.md` não acionam o workflow, exceto `rosarium.md`, que contém as orações do site. Publica no GitHub Pages após os checks passarem na `main`. Também aceita execução manual pela aba Actions.
-
-Em Settings / Pages / Build and deployment, selecione GitHub Actions como origem. A publicação usa o token automático do GitHub. O site funciona sem build, com fontes e bibliotecas locais.
-
-O carregamento de `rosarium.md` respeita o cache HTTP da hospedagem; respostas ainda válidas podem ser reutilizadas entre visitas. O botão de nova tentativa força a revalidação.
+O [workflow](.github/workflows/pages.yml) valida pushes na `main` e PRs; só a `main` publica após os checks. Configure GitHub Pages para usar GitHub Actions. O workflow copia `index.html`, `rosarium.md`, `rosary.svg`, `sw.js` e `assets/` para publicação, sem build.
