@@ -36,28 +36,36 @@
     updateCurrentLink();
   }
 
+  function showPrayers(markdown, retry) {
+    const result = RosariumContent.render(markdown);
+    content.replaceChildren(result.content);
+    links.replaceChildren(result.links);
+    navigation.hidden = false;
+    syncLayout();
+    scrollToSection();
+    if (retry) content.focus({ preventScroll: true });
+  }
+
+  function showLoadError() {
+    navigation.hidden = true;
+    content.innerHTML = `
+      <div class="load-status" role="alert">
+        <p>Não foi possível carregar as orações. Tente novamente.</p>
+        <button type="button" id="retry">Tentar novamente</button>
+        <p class="source-link"><a href="rosarium.md">Abrir o texto das orações</a></p>
+      </div>`;
+    document.getElementById("retry").addEventListener("click", () => loadPrayers(true));
+  }
+
   async function loadPrayers(retry = false) {
     content.setAttribute("aria-busy", "true");
     content.innerHTML = '<p class="load-status" role="status">Preparando as orações…</p>';
     try {
       const response = await fetch("rosarium.md", { cache: retry ? "no-cache" : "default" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const result = RosariumContent.render(await response.text());
-      content.replaceChildren(result.content);
-      links.replaceChildren(result.links);
-      navigation.hidden = false;
-      syncLayout();
-      scrollToSection();
-      if (retry) content.focus({ preventScroll: true });
+      showPrayers(await response.text(), retry);
     } catch (error) {
-      navigation.hidden = true;
-      content.innerHTML = `
-        <div class="load-status" role="alert">
-          <p>Não foi possível carregar as orações. Tente novamente.</p>
-          <button type="button" id="retry">Tentar novamente</button>
-          <p class="source-link"><a href="rosarium.md">Abrir o texto das orações</a></p>
-        </div>`;
-      document.getElementById("retry").addEventListener("click", () => loadPrayers(true));
+      showLoadError();
       console.error("Falha ao carregar o rosário:", error);
     } finally {
       content.setAttribute("aria-busy", "false");

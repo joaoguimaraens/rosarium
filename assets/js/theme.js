@@ -3,7 +3,6 @@
   const toggle = document.getElementById("theme-toggle");
   const favicon = document.getElementById("favicon");
   const storageKey = "rosarium-theme";
-  let transitionTimeout;
   let savedTheme = null;
   try {
     savedTheme = window.localStorage.getItem(storageKey);
@@ -12,14 +11,7 @@
   }
   let followsBrowser = savedTheme !== "light" && savedTheme !== "dark";
 
-  function applyTheme(dark, animate = false) {
-    if (animate) {
-      document.documentElement.classList.add("theme-transition");
-      window.clearTimeout(transitionTimeout);
-      transitionTimeout = window.setTimeout(() => {
-        document.documentElement.classList.remove("theme-transition");
-      }, 550);
-    }
+  function applyTheme(dark) {
     const theme = dark ? "dark" : "light";
     document.documentElement.dataset.theme = theme;
     toggle.setAttribute("aria-pressed", String(dark));
@@ -29,7 +21,7 @@
 
   toggle.addEventListener("click", () => {
     followsBrowser = false;
-    applyTheme(document.documentElement.dataset.theme !== "dark", true);
+    applyTheme(document.documentElement.dataset.theme !== "dark");
     try {
       window.localStorage.setItem(storageKey, document.documentElement.dataset.theme);
     } catch {
@@ -38,7 +30,7 @@
   });
 
   preference.addEventListener("change", event => {
-    if (followsBrowser) applyTheme(event.matches, true);
+    if (followsBrowser) applyTheme(event.matches);
   });
 
   applyTheme(followsBrowser ? preference.matches : savedTheme === "dark");

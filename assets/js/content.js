@@ -97,6 +97,12 @@ const RosariumContent = (() => {
     return copy;
   }
 
+  function decorativeIcon(className, iconName) {
+    const icon = element("span", `${className} icon-${iconName}`);
+    icon.setAttribute("aria-hidden", "true");
+    return icon;
+  }
+
   function createPrayer(data) {
     const prayer = element("details", "prayer");
     const latin = element("summary");
@@ -115,8 +121,7 @@ const RosariumContent = (() => {
 
   function createHeading(data) {
     const heading = element("header", "section-heading");
-    const icon = element("span", `section-icon icon-${data.icon}`);
-    icon.setAttribute("aria-hidden", "true");
+    const icon = decorativeIcon("section-icon", data.icon);
     const titleGroup = element("div");
     const title = element("h2", "", data.latinTitle);
     title.id = `${data.id}-title`;
@@ -146,8 +151,7 @@ const RosariumContent = (() => {
   function createSectionLink(data) {
     const item = element("li");
     const link = element("a", "nav-link");
-    const icon = element("span", `nav-icon icon-${data.icon}`);
-    icon.setAttribute("aria-hidden", "true");
+    const icon = decorativeIcon("nav-icon", data.icon);
     link.lang = "la";
     const label = data.latinTitle.replace(/^(?:Préces|Mystéria) /, "")
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "");

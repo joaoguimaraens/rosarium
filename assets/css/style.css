@@ -24,7 +24,6 @@
   --accent-soft: light-dark(#e6edf5, #2b4054);
   --line: light-dark(#dce3eb, #374755);
   --reading-font: "Source Serif 4", Georgia, "Times New Roman", serif;
-  --theme-transition: 500ms ease-in-out;
 }
 
 :root[data-theme="light"] {
@@ -193,7 +192,6 @@ h1 {
   height: 18px;
   padding: 6px;
   border-radius: 50%;
-  transition: color var(--theme-transition);
 }
 
 .theme-icon::before {
@@ -224,7 +222,6 @@ h1 {
   background: var(--accent-soft);
   content: "";
   transform: translateX(0);
-  transition: transform var(--theme-transition), background-color var(--theme-transition);
 }
 
 .theme-toggle[aria-pressed="true"]::before {
@@ -475,24 +472,6 @@ h1 {
   margin-top: 1rem;
 }
 
-/* Animate theme colors only while switching, keeping hover feedback immediate. */
-:root.theme-transition :is(
-  body, a, h1, .marian-quote cite,
-  .theme-toggle, .theme-icon, .section-nav .nav-link, .section-heading h2,
-  .section-subtitle, .section-days, .prayer-name, .load-status,
-  .load-status button
-) {
-  transition: color var(--theme-transition), background-color var(--theme-transition),
-    border-color var(--theme-transition), outline-color var(--theme-transition);
-}
-
-:root.theme-transition :is(
-  .skip-link, .rosary-mark, .section-icon, .section-nav, .prayer-list, .prayer, .translation
-) {
-  transition: background-color var(--theme-transition), border-color var(--theme-transition),
-    outline-color var(--theme-transition);
-}
-
 @media (max-width: 767px) {
   .container {
     padding-inline: 1.25rem;
@@ -599,11 +578,5 @@ h1 {
     margin: 0.75rem 0 0;
     padding-top: 0.75rem;
     border-top: 1px dashed var(--line);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .theme-toggle::before {
-    transition: background-color var(--theme-transition);
   }
 }

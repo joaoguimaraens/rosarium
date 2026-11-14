@@ -39,25 +39,26 @@ self.addEventListener("activate", event => {
   })());
 });
 
-self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
-  const url = new URL(event.request.url);
+function cacheURL(request) {
+  if (request.method !== "GET") return null;
+  const url = new URL(request.url);
   url.search = "";
   if (url.href === self.registration.scope) url.pathname += "index.html";
-  if (!urls.has(url.href)) return;
+  return urls.has(url.href) ? url.href : null;
+}
 
-  const cache = caches.open(CACHE_NAME);
-  const update = updates.get(url.href) || { pending: Promise.resolve() };
+function revalidate(request, url, cache) {
+  const update = updates.get(url) || { pending: Promise.resolve() };
   const token = {};
   update.latest = token;
-  updates.set(url.href, update);
-  const fresh = fetch(event.request, { cache: "no-cache" }).then(async response => {
+  updates.set(url, update);
+  return fetch(request, { cache: "no-cache" }).then(async response => {
     if (response.ok) {
       try {
         const store = await cache;
         // Serialize writes and discard responses superseded by a later request.
         update.pending = update.pending.catch(() => undefined).then(() => {
-          if (update.latest === token) return store.put(url.href, response.clone());
+          if (update.latest === token) return store.put(url, response.clone());
         });
         await update.pending;
       } catch {
@@ -66,14 +67,22 @@ self.addEventListener("fetch", event => {
     }
     return response;
   }).catch(() => undefined);
-  event.waitUntil(fresh.then(() => undefined));
+}
 
-  event.respondWith((async () => {
-    const saved = await cache.then(store => store.match(url.href)).catch(() => undefined);
-    // Explicit reloads and the retry button prefer a fresh response.
-    const retry = ["no-cache", "reload", "no-store"].includes(event.request.cache);
-    if (saved && !retry) return saved;
-    const response = await fresh;
-    return response?.ok ? response : saved || response || Response.error();
-  })());
+async function respond(request, url, cache, fresh) {
+  const saved = await cache.then(store => store.match(url)).catch(() => undefined);
+  // Explicit reloads and the retry button prefer a fresh response.
+  const retry = ["no-cache", "reload", "no-store"].includes(request.cache);
+  if (saved && !retry) return saved;
+  const response = await fresh;
+  return response?.ok ? response : saved || response || Response.error();
+}
+
+self.addEventListener("fetch", event => {
+  const url = cacheURL(event.request);
+  if (!url) return;
+  const cache = caches.open(CACHE_NAME);
+  const fresh = revalidate(event.request, url, cache);
+  event.waitUntil(fresh.then(() => undefined));
+  event.respondWith(respond(event.request, url, cache, fresh));
 });
