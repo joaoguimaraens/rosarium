@@ -137,12 +137,9 @@ const RosariumContent = (() => {
     const section = element("section", "prayer-section");
     section.id = data.id;
     section.setAttribute("aria-labelledby", `${data.id}-title`);
-    const languages = element("div", "language-labels");
-    languages.setAttribute("aria-hidden", "true");
-    languages.append(element("span", "", "Latim"), element("span", "", "Português"));
     const prayers = element("div", "prayer-list");
     prayers.append(...data.prayers.map(createPrayer));
-    section.append(createHeading(data), languages, prayers);
+    section.append(createHeading(data), prayers);
     return section;
   }
 
@@ -151,7 +148,10 @@ const RosariumContent = (() => {
     const link = element("a", "nav-link");
     const icon = element("span", `nav-icon icon-${data.icon}`);
     icon.setAttribute("aria-hidden", "true");
-    link.append(icon, element("span", "nav-label", data.title.replace(/^(?:Orações|Mistérios) /, "")));
+    link.lang = "la";
+    const label = data.latinTitle.replace(/^(?:Préces|Mystéria) /, "")
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    link.append(icon, element("span", "nav-label", label));
     link.href = `#${data.id}`;
     item.append(link);
     return item;

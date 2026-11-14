@@ -390,18 +390,6 @@ h1 {
   content: " · ";
 }
 
-.language-labels {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 0 1.25rem 0.5rem;
-  gap: 2rem;
-  color: var(--muted);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
 .prayer-list {
   overflow: hidden;
   border: 1px solid var(--line);
@@ -489,7 +477,7 @@ h1 {
 
 /* Animate theme colors only while switching, keeping hover feedback immediate. */
 :root.theme-transition :is(
-  body, a, h1, .language-labels, .marian-quote cite,
+  body, a, h1, .marian-quote cite,
   .theme-toggle, .theme-icon, .section-nav .nav-link, .section-heading h2,
   .section-subtitle, .section-days, .prayer-name, .load-status,
   .load-status button
@@ -594,8 +582,7 @@ h1 {
     display: inline;
   }
 
-  .desktop-hint,
-  .language-labels {
+  .desktop-hint {
     display: none;
   }
 
